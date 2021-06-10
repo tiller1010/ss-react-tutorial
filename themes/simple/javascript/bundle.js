@@ -92,7 +92,8 @@ var Page = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      Content: '<p></p>'
+      Content: '<p></p>',
+      SiteConfig_SocialLinks: []
     };
     return _this;
   }
@@ -119,13 +120,15 @@ var Page = /*#__PURE__*/function (_React$Component) {
 
                 if (data) {
                   parsedContent = '<p></p>';
+                  console.log(data);
 
                   if (data.Content) {
                     parsedContent = data.Content.replace(/\[image(.*)\]/, '<img $1 />');
                   }
 
                   this.setState({
-                    Content: parsedContent
+                    Content: parsedContent,
+                    SiteConfig_SocialLinks: data.SiteConfig_SocialLinks
                   });
                 }
 
@@ -146,11 +149,21 @@ var Page = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         dangerouslySetInnerHTML: {
           __html: this.state.Content
         }
-      }));
+      }), this.state.SiteConfig_SocialLinks ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", {
+        className: "social-banner"
+      }, this.state.SiteConfig_SocialLinks.map(function (socialLink) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
+          key: _this2.state.SiteConfig_SocialLinks.indexOf(socialLink)
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+          href: socialLink.Link
+        }, socialLink.Type));
+      })) : '');
     }
   }]);
 

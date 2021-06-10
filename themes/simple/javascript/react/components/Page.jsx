@@ -4,7 +4,8 @@ class Page extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			Content: '<p></p>'
+			Content: '<p></p>',
+			SiteConfig_SocialLinks: []
 		}
 	}
 
@@ -16,11 +17,13 @@ class Page extends React.Component {
 		const data = await this.props.fetchViewableData();
 		if(data){
 			let parsedContent = '<p></p>';
+			console.log(data)
 			if(data.Content){
 				parsedContent = data.Content.replace(/\[image(.*)\]/, '<img $1 />');
 			}
 			this.setState({
-				Content: parsedContent
+				Content: parsedContent,
+				SiteConfig_SocialLinks: data.SiteConfig_SocialLinks
 			});
 		}
 	}
@@ -29,6 +32,19 @@ class Page extends React.Component {
 		return(
 			<div>
 				<div dangerouslySetInnerHTML={{__html: this.state.Content}}></div>
+				{this.state.SiteConfig_SocialLinks ?
+					<ul className="social-banner">
+						{this.state.SiteConfig_SocialLinks.map((socialLink) =>
+							<li key={this.state.SiteConfig_SocialLinks.indexOf(socialLink)}>
+								<a href={socialLink.Link}>
+									{socialLink.Type}
+								</a>
+							</li>
+						)}
+					</ul>
+					:
+					''
+				}
 			</div>
 		);
 	}
