@@ -37,6 +37,7 @@ class Page extends React.Component {
 						{this.state.SiteConfig_SocialLinks.map((socialLink) =>
 							<li key={this.state.SiteConfig_SocialLinks.indexOf(socialLink)}>
 								<a href={socialLink.Link}>
+									<i className={`fab fa-${socialLink.Icon}`}></i>
 									{socialLink.Type}
 								</a>
 							</li>

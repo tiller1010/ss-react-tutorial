@@ -4,7 +4,8 @@ const webpack = require('webpack');
 module.exports = {
 	entry: [
 		'@babel/polyfill',
-		path.resolve(__dirname, 'themes/simple/javascript/react/index.jsx')
+		path.resolve(__dirname, 'themes/simple/javascript/react/index.jsx'),
+		path.resolve(__dirname, 'themes/simple/scss/custom.scss')
 	],
 	output: {
 		filename: 'javascript/bundle.js',
@@ -19,6 +20,23 @@ module.exports = {
 				use: {
 					loader: 'babel-loader'
 				}
+			},
+			{
+				test: /\.scss$/,
+				use: [
+					{
+						loader: 'style-loader'
+					},
+					{
+						loader: 'css-loader',
+						options: {
+							url: false
+						}
+					},
+					{
+						loader: 'sass-loader'
+					}
+				]
 			}
 		]
 	}
