@@ -17,7 +17,6 @@ class Page extends React.Component {
 		const data = await this.props.fetchViewableData();
 		if(data){
 			let parsedContent = '<p></p>';
-			console.log(data)
 			if(data.Content){
 				parsedContent = data.Content.replace(/\[image(.*)\]/, '<img $1 />');
 			}

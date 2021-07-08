@@ -33,7 +33,6 @@ Change it, enhance it and most importantly enjoy it!
 <div class="main" role="main">
 	<div class="inner typography line">
 		<div id="react-entry"></div>
-		$Layout
 	</div>
 </div>
 <% include Footer %>
