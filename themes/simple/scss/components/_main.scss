@@ -1,0 +1,12 @@
+html{
+	overflow-x: hidden;
+}
+.main[role="main"]{
+	padding: 0;
+	.inner.typography.line{
+		padding-top: 20px;
+	}
+	.window-component{
+		transition: transform 0.25s ease;
+	}
+}

@@ -4,6 +4,7 @@ class Page extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
+			Title: '...',
 			Content: '<p></p>',
 			SiteConfig_SocialLinks: []
 		}
@@ -14,6 +15,9 @@ class Page extends React.Component {
 	}
 
 	async loadViewableData(){
+		this.setState({
+			Content: '<div class="lds-facebook"><div></div><div></div><div></div></div>'
+		});
 		const data = await this.props.fetchViewableData();
 		if(data){
 			let parsedContent = '<p></p>';
@@ -21,6 +25,7 @@ class Page extends React.Component {
 				parsedContent = data.Content.replace(/\[image(.*)\]/, '<img $1 />');
 			}
 			this.setState({
+				Title: data.Title,
 				Content: parsedContent,
 				SiteConfig_SocialLinks: data.SiteConfig_SocialLinks
 			});
@@ -29,7 +34,8 @@ class Page extends React.Component {
 
 	render(){
 		return(
-			<div>
+			<div className="inner typography line">
+				<h1>{this.state.Title}</h1>
 				<div dangerouslySetInnerHTML={{__html: this.state.Content}}></div>
 				{this.state.SiteConfig_SocialLinks ?
 					<ul className="social-banner">

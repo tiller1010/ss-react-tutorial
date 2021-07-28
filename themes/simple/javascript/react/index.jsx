@@ -22,6 +22,33 @@ async function fetchViewableData(){
 }
 
 class Window extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			opened: false
+		}
+		this.toggleNav = this.toggleNav.bind(this);
+	}
+
+	toggleNav(){
+		if(window.innerWidth < 815){
+			this.setState(prevState => ({
+				opened: !prevState.opened
+			}));
+		}
+	}
+
+	componentDidMount(){
+		const context = this;
+		window.addEventListener('resize', function(){
+			if(window.innerWidth > 815){
+				context.setState({
+					opened: false
+				});
+			}
+		});
+	}
+
 	render(){
 		var navLinks = Array.from(document.querySelectorAll('header nav.primary > ul > li > a'));
 		var formattedNavLinks = [];
@@ -34,8 +61,22 @@ class Window extends React.Component {
 			formattedNavLinks.push(formattedNavLink);
 		});
 
+		var style;
+		if(this.state.opened){
+			style ={
+				transform: 'translateX(-200px)'
+			}
+		} else {
+			style ={
+				transform: 'translateX(0)'
+			}
+		}
+
 		return (
-			<div className="window-component">
+			<div style={style} className="window-component">
+				<div className="main-nav-menu-button" onClick={this.toggleNav}>
+					<i className="fas fa-bars"></i>
+				</div>
 				<div className="nav">
 					<ul className="main-nav-list">
 						{formattedNavLinks.map((link) => (

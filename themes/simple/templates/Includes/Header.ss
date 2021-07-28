@@ -1,4 +1,4 @@
-<header class="header" role="banner">
+<header class="header" role="banner" style="display: none;">
 	<div class="inner">
 		<div class="unit size4of4 lastUnit">
 			<a href="$BaseHref" class="brand" rel="home">
