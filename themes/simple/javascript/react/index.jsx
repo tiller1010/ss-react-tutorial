@@ -50,6 +50,9 @@ class Window extends React.Component {
 	}
 
 	render(){
+		// Used for routing
+		var allFormattedNavLinks = [];
+		// Get top level nav links
 		var navLinks = Array.from(document.querySelectorAll('header nav.primary > ul > li > a'));
 		var formattedNavLinks = [];
 		navLinks.forEach((link) => {
@@ -58,7 +61,20 @@ class Window extends React.Component {
 			var urlSegment = link.href.split('/').reverse()[1] !== document.domain ? '/' + link.href.split('/').reverse()[1] : '/home';
 			formattedNavLink.URLSegment = urlSegment;
 			formattedNavLink.pagetype = link.attributes.pagetype.value;
+			// Get dropdown nav links
+			formattedNavLink.children = [];
+			var subPages = Array.from(link.parentElement.querySelectorAll('ul.nav-dropdown li a'));
+			subPages.forEach((subPage) => {
+				var formattedSubPageNavLink = {};
+				formattedSubPageNavLink.Title = subPage.innerText;
+				var subPageUrlSegment = subPage.href.replace(document.location.origin, '');
+				formattedSubPageNavLink.URLSegment = subPageUrlSegment;
+				formattedSubPageNavLink.pagetype = subPage.attributes.pagetype.value;
+				formattedNavLink.children.push(formattedSubPageNavLink);
+				allFormattedNavLinks.push(formattedSubPageNavLink);
+			});
 			formattedNavLinks.push(formattedNavLink);
+			allFormattedNavLinks.push(formattedNavLink);
 		});
 
 		var style;
@@ -80,10 +96,23 @@ class Window extends React.Component {
 				<div className="nav">
 					<ul className="main-nav-list">
 						{formattedNavLinks.map((link) => (
-							<li key={formattedNavLinks.indexOf(link)} className="main-nav-list-item">
+							<li key={formattedNavLinks.indexOf(link)} className="main-nav-list-item" onClick={this.toggleNav}>
 								<Link to={link.URLSegment}>
 									{link.Title}
 								</Link>
+								{link.children.length ?
+									<ul className="main-nav-dropdown">
+										{link.children.map((subPageLink) => (
+											<li key={link.children.indexOf(subPageLink)}>
+												<Link to={subPageLink.URLSegment}>
+													{subPageLink.Title}
+												</Link>
+											</li>
+										))}
+									</ul>
+									:
+									''
+								}
 							</li>
 						))}
 					</ul>
@@ -92,8 +121,8 @@ class Window extends React.Component {
 					<Route exact path="/">
 						<Page fetchViewableData={fetchViewableData}/>
 					</Route>
-					{formattedNavLinks.map((link) => (
-						<Route key={formattedNavLinks.indexOf(link)} path={link.URLSegment}>
+					{allFormattedNavLinks.map((link) => (
+						<Route key={allFormattedNavLinks.indexOf(link)} path={link.URLSegment}>
 							<Page fetchViewableData={fetchViewableData}/>
 						</Route>
 					))}

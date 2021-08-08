@@ -20,6 +20,9 @@ class Page extends React.Component {
 		});
 		const data = await this.props.fetchViewableData();
 		if(data){
+			if(data.Title){
+				document.querySelector('title').innerHTML = data.Title;
+			}
 			let parsedContent = '<p></p>';
 			if(data.Content){
 				parsedContent = data.Content.replace(/\[image(.*)\]/, '<img $1 />');
