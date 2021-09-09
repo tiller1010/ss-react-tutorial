@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Page from './components/Page.jsx';
+import BlogPage from './components/BlogPage.jsx';
 import { Route, Router, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
@@ -47,6 +48,16 @@ class Window extends React.Component {
 				});
 			}
 		});
+	}
+
+	renderSwitch(pagetype){
+		switch(pagetype){
+			case 'Page':
+				return <Page fetchViewableData={fetchViewableData}/>
+			case 'BlogPage':
+				return <BlogPage fetchViewableData={fetchViewableData}/>
+			break;
+		}
 	}
 
 	render(){
@@ -123,7 +134,7 @@ class Window extends React.Component {
 					</Route>
 					{allFormattedNavLinks.map((link) => (
 						<Route key={allFormattedNavLinks.indexOf(link)} path={link.URLSegment}>
-							<Page fetchViewableData={fetchViewableData}/>
+							{this.renderSwitch(link.pagetype)}
 						</Route>
 					))}
 				</Switch>
