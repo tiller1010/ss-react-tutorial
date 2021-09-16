@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class BlogPage extends React.Component {
 	constructor(props){
@@ -13,26 +13,38 @@ class BlogPage extends React.Component {
 			SiteConfig_SocialLinks: []
 		}
 		this.renderArticle = this.renderArticle.bind(this);
+		this.renderArticleLink = this.renderArticleLink.bind(this);
 	}
 
-	componentDidMount(){
+	componentWillMount(){
 		this.loadViewableData();
-		this.renderArticle();
-	}
-
-	componentDidUpdate(prevProps){
-		if(prevProps.location.key !== this.props.location.key){
+		if(this.props.isBrowser){
 			this.renderArticle();
 		}
 	}
 
+	componentDidUpdate(prevProps){
+		if(this.props.isBrowser){
+			if(prevProps.location){
+				if(prevProps.location.key !== this.props.location.key){
+					this.renderArticle();
+				}
+			}
+		}
+	}
+
 	async loadViewableData(){
-		this.setState({
-			Content: '<div class="lds-facebook"><div></div><div></div><div></div></div>'
-		});
-		const data = await this.props.fetchViewableData();
+		let data = {};
+		if(this.props.isBrowser){
+			this.setState({
+				Content: '<div class="lds-facebook"><div></div><div></div><div></div></div>'
+			});
+			data = await this.props.fetchViewableData();
+		} else {
+			data = this.props.fetchViewableData();
+		}
 		if(data){
-			if(data.Title){
+			if(data.Title && this.props.isBrowser){
 				document.querySelector('title').innerHTML = data.Title;
 			}
 			let parsedContent = '<p></p>';
@@ -44,7 +56,8 @@ class BlogPage extends React.Component {
 				Content: parsedContent,
 				URLSegment: data.URLSegment,
 				Articles: data.Articles,
-				SiteConfig_SocialLinks: data.SiteConfig_SocialLinks
+				SiteConfig_SocialLinks: data.SiteConfig_SocialLinks,
+				ArticleMarkup: data.DefaultArticleMarkup ? data.DefaultArticleMarkup : '<p></p>'
 			});
 		}
 	}
@@ -59,6 +72,36 @@ class BlogPage extends React.Component {
 				.then(response => this.setState({ArticleMarkup: response}));
 		} else {
 			this.setState({ArticleMarkup: '<p></p>'});
+		}
+	}
+
+	renderArticleLink(article){
+		if(this.props.isBrowser){
+			return(
+				<Link to={`/${this.state.URLSegment}/articles/${article.URLSegment}`}>
+					<p>{article.Title}</p>
+					<div className="img-container">
+						{article.ImageURL ?
+							<img src={article.ImageURL} alt={`${article.Title} image`}/>
+							:
+							''
+						}
+					</div>
+				</Link>
+			);
+		} else {
+			return(
+				<a href={`/${this.state.URLSegment}/articles/${article.URLSegment}`}>
+					<p>{article.Title}</p>
+					<div className="img-container">
+						{article.ImageURL ?
+							<img src={article.ImageURL} alt={`${article.Title} image`}/>
+							:
+							''
+						}
+					</div>
+				</a>
+			);
 		}
 	}
 
@@ -88,16 +131,7 @@ class BlogPage extends React.Component {
 						<ul className='blog-listing'>
 							{this.state.Articles.map((article) => 
 								<li key={this.state.Articles.indexOf(article)}>
-									<Link to={`/${this.state.URLSegment}/articles/${article.URLSegment}`}>
-										<p>{article.Title}</p>
-										<div className="img-container">
-											{article.ImageURL ?
-												<img src={article.ImageURL} alt={`${article.Title} image`}/>
-												:
-												''
-											}
-										</div>
-									</Link>
+									{this.renderArticleLink(article)}
 								</li>
 							)}
 						</ul>
@@ -110,4 +144,4 @@ class BlogPage extends React.Component {
 	}
 }
 
-export default withRouter(BlogPage);
+export default BlogPage;

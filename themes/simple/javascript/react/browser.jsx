@@ -1,26 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
 import Page from './components/Page.jsx';
 import BlogPage from './components/BlogPage.jsx';
 import { Route, Router, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
-
-async function fetchViewableData(){
-	try {
-		const path = document.location.pathname === '/' ? `${document.location}home` : document.location;
-		const response = await fetch(`${path}/fetchViewableData`, {
-			method: 'GET',
-			headers: {'Content-Type': 'application/json'}
-		});
-		const body = await response.text();
-		const result = JSON.parse(body);
-
-		return result;
-	} catch(error){
-		console.log(error);
-	}
-}
+import PageData from './PageData.jsx';
 
 class Window extends React.Component {
 	constructor(props){
@@ -29,14 +15,6 @@ class Window extends React.Component {
 			opened: false
 		}
 		this.toggleNav = this.toggleNav.bind(this);
-	}
-
-	toggleNav(){
-		if(window.innerWidth < 815){
-			this.setState(prevState => ({
-				opened: !prevState.opened
-			}));
-		}
 	}
 
 	componentDidMount(){
@@ -50,13 +28,28 @@ class Window extends React.Component {
 		});
 	}
 
-	renderSwitch(pagetype){
-		switch(pagetype){
-			case 'Page':
-				return <Page fetchViewableData={fetchViewableData}/>
-			case 'BlogPage':
-				return <BlogPage fetchViewableData={fetchViewableData}/>
-			break;
+
+	async fetchViewableData(){
+		try {
+			const path = document.location.pathname === '/' ? `${document.location}home` : document.location;
+			const response = await fetch(`${path}/fetchViewableData`, {
+				method: 'GET',
+				headers: {'Content-Type': 'application/json'}
+			});
+			const body = await response.text();
+			const result = JSON.parse(body);
+
+			return result;
+		} catch(error){
+			console.log(error);
+		}
+	}
+
+	toggleNav(){
+		if(window.innerWidth < 815){
+			this.setState(prevState => ({
+				opened: !prevState.opened
+			}));
 		}
 	}
 
@@ -104,48 +97,20 @@ class Window extends React.Component {
 				<div className="main-nav-menu-button" onClick={this.toggleNav}>
 					<i className="fas fa-bars"></i>
 				</div>
-				<div className="nav">
-					<ul className="main-nav-list">
-						{formattedNavLinks.map((link) => (
-							<li key={formattedNavLinks.indexOf(link)} className="main-nav-list-item" onClick={this.toggleNav}>
-								<Link to={link.URLSegment}>
-									{link.Title}
-								</Link>
-								{link.children.length ?
-									<ul className="main-nav-dropdown">
-										{link.children.map((subPageLink) => (
-											<li key={link.children.indexOf(subPageLink)}>
-												<Link to={subPageLink.URLSegment}>
-													{subPageLink.Title}
-												</Link>
-											</li>
-										))}
-									</ul>
-									:
-									''
-								}
-							</li>
-						))}
-					</ul>
-				</div>
-				<Switch>
-					<Route exact path="/">
-						<Page fetchViewableData={fetchViewableData}/>
-					</Route>
-					{allFormattedNavLinks.map((link) => (
-						<Route key={allFormattedNavLinks.indexOf(link)} path={link.URLSegment}>
-							{this.renderSwitch(link.pagetype)}
-						</Route>
-					))}
-				</Switch>
+				<PageData
+					fetchViewableData={this.fetchViewableData}
+					formattedNavLinks={formattedNavLinks}
+					allFormattedNavLinks={allFormattedNavLinks}
+					toggleNav={this.toggleNav}
+					isBrowser={true}
+				/>
 			</div>
 		);
 	}
 }
 
 const history = createBrowserHistory();
-
-ReactDOM.render(
+ReactDOM.hydrate(
 	<Router history={history}>
 		<Window/>
 	</Router>,

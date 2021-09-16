@@ -4,6 +4,10 @@ namespace {
 
     use SilverStripe\CMS\Controllers\ContentController;
     use SilverStripe\Control\HTTPRequest;
+    use SilverStripe\View\ThemeResourceLoader;
+    use Spatie\Ssr\Renderer;
+    use Spatie\Ssr\Engines\Node;
+    use SilverStripe\Core\Environment;
 
     class PageController extends ContentController
     {
@@ -37,7 +41,32 @@ namespace {
             // See: https://docs.silverstripe.org/en/developer_guides/templates/requirements/
         }
 
-        public function feedViewableData(HTTPRequest $request)
+        public function index(HTTPRequest $request)
+        {
+            // Format nav links with children
+            $formattedNavLinks = [];
+            foreach($this->Menu(1) as $navLink){
+                $formattedNavLink = $navLink->toMap();
+                $formattedNavLink['Children'] = $navLink->Children()->toNestedArray();
+                array_push($formattedNavLinks, $formattedNavLink);
+            }
+            
+            // Start Server Side Rendering
+            $engine = new Node(Environment::getEnv('SERVER_NODE_PATH'), Environment::getEnv('SERVER_TEMP_PATH'));
+            $renderer = new Renderer($engine);
+            $serverRenderedHTML = $renderer
+                ->entry(__DIR__ . '/../../' . ThemeResourceLoader::inst()->findThemedJavascript('server-bundle'))
+                ->context('viewableData', $this->feedViewableData())
+                ->context('navLinks', $formattedNavLinks)
+                ->context('ClassName', $this->ClassName)
+                ->render();
+            return $this->customise([
+                'ServerRenderedHTML' => $serverRenderedHTML
+            ]);
+
+        }
+
+        public function feedViewableData()
         {
             $viewableData = [
                 'Title' => $this->Title,

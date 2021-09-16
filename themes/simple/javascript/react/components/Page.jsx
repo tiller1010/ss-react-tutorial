@@ -10,17 +10,22 @@ class Page extends React.Component {
 		}
 	}
 
-	componentDidMount(){
+	componentWillMount(){
 		this.loadViewableData();
 	}
 
 	async loadViewableData(){
-		this.setState({
-			Content: '<div class="lds-facebook"><div></div><div></div><div></div></div>'
-		});
-		const data = await this.props.fetchViewableData();
+		let data = {};
+		if(this.props.isBrowser){
+			this.setState({
+				Content: '<div class="lds-facebook"><div></div><div></div><div></div></div>'
+			});
+			data = await this.props.fetchViewableData();
+		} else {
+			data = this.props.fetchViewableData();
+		}
 		if(data){
-			if(data.Title){
+			if(data.Title && this.props.isBrowser){
 				document.querySelector('title').innerHTML = data.Title;
 			}
 			let parsedContent = '<p></p>';

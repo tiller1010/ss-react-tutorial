@@ -31,13 +31,15 @@ Change it, enhance it and most importantly enjoy it!
 <body class="$ClassName.ShortName<% if not $Menu(2) %> no-sidebar<% end_if %>" <% if $i18nScriptDirection %>dir="$i18nScriptDirection"<% end_if %>>
 <% include Header %>
 <div class="main" role="main">
-	<div id="react-entry"></div>
+	<div id="react-entry">
+		$ServerRenderedHTML.RAW
+	</div>
 </div>
 <% include Footer %>
 
 <% require javascript('//code.jquery.com/jquery-3.3.1.min.js') %>
 <% require themedJavascript('script') %>
-<% require themedJavascript('bundle') %>
+<% require themedJavascript('browser-bundle') %>
 
 </body>
 </html>

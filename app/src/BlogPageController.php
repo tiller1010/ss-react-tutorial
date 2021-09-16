@@ -14,7 +14,7 @@ class BlogPageController extends PageController
         'articles/$articleURL' => 'renderArticle'
     ];
 
-    public function feedViewableData(HTTPRequest $request)
+    public function feedViewableData()
     {
         $viewableData = [
             'Title' => $this->Title,
@@ -23,21 +23,32 @@ class BlogPageController extends PageController
             'Articles' => $this->Articles()->toNestedArray(),
             'SiteConfig_SocialLinks' => $this->SiteConfig->SocialLinks()->toNestedArray()
         ];
+        if($this->getArticleHTML()){
+            $viewableData['DefaultArticleMarkup'] = $this->getArticleHTML()->Raw();
+        }
         return json_encode($viewableData);
     }
 
     public function renderArticle()
     {
     	if($this->getRequest()->isAjax()){
-    		$articleURL = $this->getRequest()->param('articleURL');
-    		$article = ArticleObject::get()->filter(['URLSegment' => $articleURL])->first();
-    		if($article->exists()){
-    			return $article->renderWith('Layout/Article');
-    		} else {
-    			return $this;
-    		}
+    		return $this->getArticleHTML();
     	} else {
-    		return $this;
+    		return $this->index($this->request);
     	}
+    }
+
+    public function getArticleHTML()
+    {
+        $articleURL = $this->getRequest()->param('articleURL');
+        $article = ArticleObject::get()->filter([
+            'URLSegment' => $articleURL,
+            'BlogPageID' => $this->ID
+        ])->first();
+        if($article){
+            return $article->renderWith('Layout/Article');
+        } else {
+            return null;
+        }
     }
 }

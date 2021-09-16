@@ -12,6 +12,10 @@ class BlogPage extends Page {
 		'Articles' => ArticleObject::class
 	];
 
+	private static $owns = [
+		'Articles'
+	];
+
 	public function getCMSFields()
 	{
 		$fields = parent::getCMSFields();
