@@ -3,11 +3,18 @@ import React from 'react';
 class Page extends React.Component {
 	constructor(props){
 		super(props);
-		this.state = {
+		let state = {
 			Title: '...',
 			Content: '<p></p>',
 			SiteConfig_SocialLinks: []
 		}
+		if(this.props.isBrowser){
+			if(window.initialReactData){
+				state = window.initialReactData;
+				delete window.initialReactData;
+			}
+		}
+		this.state = state;
 	}
 
 	componentWillMount(){

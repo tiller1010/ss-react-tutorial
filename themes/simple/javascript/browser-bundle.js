@@ -341,7 +341,7 @@ var BlogPage = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, BlogPage);
 
     _this = _super.call(this, props);
-    _this.state = {
+    var state = {
       Title: '...',
       Content: '<p></p>',
       URLSegment: '',
@@ -349,6 +349,15 @@ var BlogPage = /*#__PURE__*/function (_React$Component) {
       Articles: [],
       SiteConfig_SocialLinks: []
     };
+
+    if (_this.props.isBrowser) {
+      if (window.initialReactData) {
+        state = window.initialReactData;
+        delete window.initialReactData;
+      }
+    }
+
+    _this.state = state;
     _this.renderArticle = _this.renderArticle.bind(_assertThisInitialized(_this));
     _this.renderArticleLink = _this.renderArticleLink.bind(_assertThisInitialized(_this));
     return _this;
@@ -610,11 +619,20 @@ var Page = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, Page);
 
     _this = _super.call(this, props);
-    _this.state = {
+    var state = {
       Title: '...',
       Content: '<p></p>',
       SiteConfig_SocialLinks: []
     };
+
+    if (_this.props.isBrowser) {
+      if (window.initialReactData) {
+        state = window.initialReactData;
+        delete window.initialReactData;
+      }
+    }
+
+    _this.state = state;
     return _this;
   }
 

@@ -8,6 +8,7 @@ namespace {
     use Spatie\Ssr\Renderer;
     use Spatie\Ssr\Engines\Node;
     use SilverStripe\Core\Environment;
+    use SilverStripe\View\Requirements;
 
     class PageController extends ContentController
     {
@@ -39,6 +40,10 @@ namespace {
             parent::init();
             // You can include any CSS or JS required by your project here.
             // See: https://docs.silverstripe.org/en/developer_guides/templates/requirements/
+            Requirements::customScript('
+                window.initialReactData = JSON.parse(`' . $this->feedViewableData() . '`);
+            ');
+            Requirements::javascript(ThemeResourceLoader::inst()->findThemedJavascript('browser-bundle'), ['defer' => true]);
         }
 
         public function index(HTTPRequest $request)

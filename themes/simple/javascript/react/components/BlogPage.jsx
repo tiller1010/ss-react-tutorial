@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 class BlogPage extends React.Component {
 	constructor(props){
 		super(props);
-		this.state = {
+		let state = {
 			Title: '...',
 			Content: '<p></p>',
 			URLSegment: '',
@@ -12,6 +12,13 @@ class BlogPage extends React.Component {
 			Articles: [],
 			SiteConfig_SocialLinks: []
 		}
+		if(this.props.isBrowser){
+			if(window.initialReactData){
+				state = window.initialReactData;
+				delete window.initialReactData;
+			}
+		}
+		this.state = state;
 		this.renderArticle = this.renderArticle.bind(this);
 		this.renderArticleLink = this.renderArticleLink.bind(this);
 	}

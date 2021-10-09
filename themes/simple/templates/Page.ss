@@ -39,7 +39,6 @@ Change it, enhance it and most importantly enjoy it!
 
 <% require javascript('//code.jquery.com/jquery-3.3.1.min.js') %>
 <% require themedJavascript('script') %>
-<% require themedJavascript('browser-bundle') %>
 
 </body>
 </html>
