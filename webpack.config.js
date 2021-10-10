@@ -7,7 +7,7 @@ module.exports = {
 			import: [
 				'@babel/polyfill',
 				path.resolve(__dirname, 'themes/simple/javascript/react/browser.jsx'),
-				path.resolve(__dirname, 'themes/simple/scss/custom.scss')
+				'style-loader!' + path.resolve(__dirname, 'themes/simple/scss/custom.scss')
 			]
 		},
 		server: {
@@ -34,9 +34,6 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				use: [
-					{
-						loader: 'style-loader'
-					},
 					{
 						loader: 'css-loader',
 						options: {

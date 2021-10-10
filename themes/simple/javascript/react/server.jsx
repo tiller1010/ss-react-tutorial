@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import PageData from './PageData.jsx';
+import styles from '../../scss/custom.scss';
 
 function fetchViewableData(){
 	return JSON.parse(context.viewableData);
 }
 
-// // Used for routing
+// Used for routing
 var allFormattedNavLinks = [];
 // Get top level nav links
 var formattedNavLinks = [];
@@ -29,7 +30,7 @@ context.navLinks.forEach((link) => {
 	allFormattedNavLinks.push(formattedNavLink);
 });
 
-const html = ReactDOMServer.renderToString(
+let html = ReactDOMServer.renderToString(
 	<div className="window-component">
 		<div className="main-nav-menu-button">
 			<i className="fas fa-bars"></i>
@@ -43,4 +44,8 @@ const html = ReactDOMServer.renderToString(
 		/>
 	</div>
 );
+const css = `<style>${styles.toString()}</style>`;
+
+html = html + css;
+
 dispatch(html);
