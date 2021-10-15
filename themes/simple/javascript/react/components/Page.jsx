@@ -30,6 +30,7 @@ class Page extends React.Component {
 			this.setState({
 				Title: data.Title,
 				Content: parsedContent,
+				ElementalArea: data.ElementalArea,
 				SiteConfig_SocialLinks: data.SiteConfig_SocialLinks
 			});
 		}
@@ -40,6 +41,7 @@ class Page extends React.Component {
 			<div className="inner typography line">
 				<h1>{this.state.Title}</h1>
 				<div dangerouslySetInnerHTML={{__html: this.state.Content}}></div>
+				<div dangerouslySetInnerHTML={{__html: this.state.ElementalArea}}></div>
 				{this.state.SiteConfig_SocialLinks ?
 					<ul className="social-banner">
 						{this.state.SiteConfig_SocialLinks.map((socialLink) =>
