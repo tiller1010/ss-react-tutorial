@@ -42,6 +42,7 @@ namespace {
             $viewableData = [
                 'Title' => $this->Title,
                 'Content' => $this->Content,
+                'ElementalArea' => $this->ElementalArea->forTemplate()->RAW(),
                 'SiteConfig_SocialLinks' => $this->SiteConfig->SocialLinks()->toNestedArray()
             ];
             return json_encode($viewableData);

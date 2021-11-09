@@ -6,7 +6,8 @@
         "php": "^7.1 || ^8",
         "silverstripe/recipe-plugin": "^1.2",
         "silverstripe/recipe-cms": "4.7.3@stable",
-        "silverstripe/login-forms": "4.3.0@stable"
+        "silverstripe/login-forms": "4.3.0@stable",
+        "dnadesign/silverstripe-elemental": "^4"
     },
     "require-dev": {
         "sminnee/phpunit": "^5.7",
